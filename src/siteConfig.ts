@@ -6,9 +6,9 @@ import type {
 } from "@/types.ts";
 
 export const SITE: SiteConfiguration = {
-  title: "TinyBones",
-  description: "A minimal blog template for your thoughts",
-  href: "https://tinybones.pages.dev/",
+  title: "TinyDocs",
+  description: "A minimal documentation framework",
+  href: "https://tinydocs.pages.dev/",
   author: "BadDeveloper",
   locale: "en-US",
 };
@@ -16,7 +16,7 @@ export const SITE: SiteConfiguration = {
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: "GitHub",
-    href: "https://github.com/itzcozi/tinybones",
+    href: "https://github.com/itzcozi/tinydocs",
   },
   {
     label: "Twitter",
@@ -29,17 +29,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 export const NAV_LINKS: NavigationLinks = {
+  docs: {
+    path: "/docs",
+    label: "Docs",
+  },
   about: {
     path: "/about",
     label: "About",
-  },
-  blog: {
-    path: "/blog",
-    label: "Blog",
-  },
-  projects: {
-    path: "/projects",
-    label: "Projects",
   },
 };
 
@@ -49,7 +45,7 @@ export const NAV_LINKS: NavigationLinks = {
 // 2. Set up Giscus on your GitHub repository: https://giscus.app/
 // 3. Fill in your repository details below
 export const GISCUS_CONFIG: GiscusConfig = {
-  enabled: true,
+  enabled: false,
   repo: "itzcozi/keyboard-cat",
   repoId: "R_kgDONgUFAA",
   category: "Announcements",

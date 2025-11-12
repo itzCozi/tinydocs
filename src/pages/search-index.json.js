@@ -2,9 +2,9 @@ import { getCollection } from "astro:content";
 import { SITE } from "@/siteConfig";
 
 export async function GET() {
-  const posts = await getCollection("blog");
+  const docs = await getCollection("docs");
 
-  const searchData = posts.map((post) => {
+  const searchData = docs.map((doc) => {
     let contentText = "";
 
     const stripMDXComponentsAndMarkdown = (input = "") => {
@@ -27,19 +27,17 @@ export async function GET() {
     };
 
     try {
-      contentText = stripMDXComponentsAndMarkdown(post.body).substring(0, 5000);
+      contentText = stripMDXComponentsAndMarkdown(doc.body).substring(0, 5000);
     } catch (err) {
-      console.error(`Error processing content for ${post.slug}:`, err);
+      console.error(`Error processing content for ${doc.id}:`, err);
     }
 
     return {
-      title: post.data.title,
-      description: post.data.description || "",
+      title: doc.data.title,
+      description: doc.data.description || "",
       content: contentText,
-      url: `/blog/${post.id}`,
-      pubDate: post.data.publicationDate,
+      url: `/docs/${doc.id.replace(/\/index$/, "")}`,
       author: SITE.author,
-      tags: post.data.tags || [],
     };
   });
 

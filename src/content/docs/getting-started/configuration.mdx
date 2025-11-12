@@ -1,0 +1,58 @@
+---
+title: Configuration
+description: Configure your TinyDocs site
+order: 3
+---
+
+# Configuration
+
+Customize your TinyDocs site by editing the configuration files.
+
+## Site Configuration
+
+Edit `src/siteConfig.ts` to update your site's metadata:
+
+```typescript
+export const SITE = {
+  title: "Your Docs",
+  description: "Your documentation site description",
+  href: "https://yourdocs.com/",
+  author: "Your Name",
+  locale: "en-US",
+};
+```
+
+## Navigation Links
+
+Update the navigation links in the same file:
+
+```typescript
+export const NAV_LINKS = {
+  docs: {
+    path: "/docs",
+    label: "Docs",
+  },
+  about: {
+    path: "/about",
+    label: "About",
+  },
+};
+```
+
+## Social Links
+
+Configure your social media links:
+
+```typescript
+export const SOCIAL_LINKS = [
+  {
+    label: "GitHub",
+    href: "https://github.com/yourusername",
+  },
+  // Add more links as needed
+];
+```
+
+## Next Steps
+
+Learn how to [create content](/docs/getting-started/creating-content) for your documentation.

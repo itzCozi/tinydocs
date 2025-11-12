@@ -1,7 +1,6 @@
 ---
 import { NAV_LINKS, SITE } from "@/siteConfig";
 import Search from "./Search.astro";
-import BlogDropdown from "./BlogDropdown.astro";
 import { Menu, Search as SearchIcon, X, BookOpenText } from "lucide-astro";
 
 interface Props {
@@ -18,9 +17,6 @@ const { showMobileToc = false } = Astro.props as Props;
     class="mx-auto flex max-w-screen-lg flex-wrap items-center justify-between p-2 pb-2 font-sans sm:px-5 sm:py-3">
     <div class="flex w-full items-center justify-between md:w-auto">
       <div class="flex items-center gap-4">
-        <div class="hidden md:block">
-          <BlogDropdown />
-        </div>
         <a
           href="/"
           class="text-xl font-bold"

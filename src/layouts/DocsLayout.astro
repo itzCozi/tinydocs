@@ -1,0 +1,76 @@
+---
+import "@/styles/global.css";
+
+import BaseHead from "@/components/BaseHead.astro";
+import Footer from "@/components/Footer.astro";
+import Navigation from "@/components/Navigation.astro";
+import DocsSidebar from "@/components/DocsSidebar.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+  <BaseHead>
+    <title>{title} - TinyDocs</title>
+    {description && <meta name="description" content={description} />}
+    <slot name="head" />
+  </BaseHead>
+  <body class="bg-bg dark:bg-dark-bg">
+    <Navigation showMobileToc />
+    <div class="mx-auto max-w-screen-xl p-3 pt-16 font-sans sm:p-6 sm:pt-20">
+      <div class="docs-layout">
+        <DocsSidebar />
+        <main class="docs-content min-h-[75vh]">
+          <slot />
+        </main>
+        <aside class="docs-toc">
+          <slot name="toc" />
+        </aside>
+      </div>
+      <Footer />
+    </div>
+    <script src="/src/scripts/copy-code.js"></script>
+  </body>
+</html>
+
+<style>
+  .docs-layout {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    .docs-layout {
+      grid-template-columns: 250px 1fr;
+      gap: 3rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .docs-layout {
+      grid-template-columns: 250px 1fr 200px;
+      gap: 3rem;
+    }
+  }
+
+  .docs-content {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .docs-toc {
+    display: none;
+  }
+
+  @media (min-width: 1280px) {
+    .docs-toc {
+      display: block;
+    }
+  }
+</style>

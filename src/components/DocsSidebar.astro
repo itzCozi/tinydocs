@@ -1,0 +1,292 @@
+---
+import { FileText, ChevronDown, ChevronRight } from "lucide-astro";
+import { getCollection } from "astro:content";
+
+// Get all docs entries
+const docsEntries = await getCollection("docs");
+
+// Build the navigation structure
+interface DocItem {
+  id: string;
+  title: string;
+  order: number;
+  url: string;
+}
+
+interface DocSection {
+  name: string;
+  items: DocItem[];
+  order: number;
+  isCollapsible: boolean;
+}
+
+const sections = new Map<string, DocSection>();
+
+// Group documents by their parent directory
+docsEntries.forEach((entry) => {
+  const pathParts = entry.id.split("/");
+  
+  // Determine section based on path structure
+  let sectionName: string;
+  let isCollapsible = false;
+  
+  if (pathParts.length === 1 || (pathParts.length === 2 && pathParts[1] === "index")) {
+    // Root level docs (e.g., "index.mdx" or "docs/index.mdx")
+    sectionName = "Root";
+  } else {
+    // Subdirectory docs (e.g., "intro/index.mdx")
+    sectionName = pathParts[0]
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    isCollapsible = true;
+  }
+  
+  if (!sections.has(sectionName)) {
+    sections.set(sectionName, {
+      name: sectionName,
+      items: [],
+      order: entry.data.order || 999,
+      isCollapsible,
+    });
+  }
+  
+  const section = sections.get(sectionName)!;
+  
+  // Determine the display path
+  let displayPath = entry.id;
+  if (displayPath.endsWith("/index")) {
+    displayPath = displayPath.replace(/\/index$/, "");
+  }
+  
+  section.items.push({
+    id: entry.id,
+    title: entry.data.title,
+    order: entry.data.order || 999,
+    url: `/docs/${displayPath}`,
+  });
+  
+  // Update section order to be minimum of all items in it
+  if (entry.data.order && entry.data.order < section.order) {
+    section.order = entry.data.order;
+  }
+});
+
+// Sort sections and items
+const sortedSections = Array.from(sections.values())
+  .sort((a, b) => a.order - b.order)
+  .map((section) => ({
+    ...section,
+    items: section.items.sort((a, b) => a.order - b.order),
+  }));
+
+const currentPath = Astro.url.pathname;
+---
+
+<aside class="docs-sidebar">
+  <nav class="sidebar-nav" aria-label="Documentation navigation">
+    {sortedSections.map((section) => (
+      <div class="sidebar-section">
+        {section.isCollapsible ? (
+          <>
+            <button
+              class="section-toggle"
+              aria-expanded="true"
+              data-section={section.name}
+            >
+              <ChevronDown class="chevron-icon h-4 w-4" />
+              <ChevronRight class="chevron-icon chevron-right h-4 w-4 hidden" />
+              <span class="section-title">{section.name}</span>
+            </button>
+            <ul class="section-items" data-section-items={section.name}>
+              {section.items.map((item) => {
+                const isActive = currentPath === item.url || currentPath === `${item.url}/`;
+                return (
+                  <li>
+                    <a
+                      href={item.url}
+                      class={`sidebar-link ${isActive ? "active" : ""}`}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <FileText class="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        ) : (
+          <ul class="section-items root-items">
+            {section.items.map((item) => {
+              const isActive = currentPath === item.url || currentPath === `${item.url}/`;
+              return (
+                <li>
+                  <a
+                    href={item.url}
+                    class={`sidebar-link ${isActive ? "active" : ""}`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    <FileText class="h-4 w-4" />
+                    <span>{item.title}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    ))}
+  </nav>
+</aside>
+
+<style>
+  .docs-sidebar {
+    position: sticky;
+    top: 5rem;
+    height: calc(100vh - 5rem);
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .section-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+  }
+
+  .section-toggle:hover {
+    background-color: rgb(245 245 245);
+  }
+
+  :global(.dark) .section-toggle:hover {
+    background-color: rgb(38 38 38);
+  }
+
+  .section-toggle[aria-expanded="false"] .chevron-icon:not(.chevron-right) {
+    display: none;
+  }
+
+  .section-toggle[aria-expanded="false"] .chevron-right {
+    display: block !important;
+  }
+
+  .section-title {
+    flex: 1;
+  }
+
+  .section-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding-left: 0;
+    list-style: none;
+    margin: 0;
+  }
+
+  .section-items.root-items {
+    padding-left: 0;
+  }
+
+  .section-items:not(.root-items) {
+    padding-left: 1.5rem;
+  }
+
+  .section-items.collapsed {
+    display: none;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-muted-text);
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+  }
+
+  :global(.dark) .sidebar-link {
+    color: var(--color-dark-muted-text);
+  }
+
+  .sidebar-link:hover {
+    background-color: rgb(245 245 245);
+    color: var(--color-text);
+  }
+
+  :global(.dark) .sidebar-link:hover {
+    background-color: rgb(38 38 38);
+    color: var(--color-dark-text);
+  }
+
+  .sidebar-link.active {
+    background-color: rgb(229 231 235);
+    color: var(--color-link);
+    font-weight: 500;
+  }
+
+  :global(.dark) .sidebar-link.active {
+    background-color: rgb(38 38 38);
+    color: var(--color-dark-link);
+  }
+
+  @media (max-width: 1023px) {
+    .docs-sidebar {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function initSidebar() {
+    const toggleButtons = document.querySelectorAll(".section-toggle");
+    
+    toggleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+        const sectionName = button.getAttribute("data-section");
+        const items = document.querySelector(`[data-section-items="${sectionName}"]`);
+        
+        button.setAttribute("aria-expanded", isExpanded ? "false" : "true");
+        
+        if (items) {
+          if (isExpanded) {
+            items.classList.add("collapsed");
+          } else {
+            items.classList.remove("collapsed");
+          }
+        }
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initSidebar);
+  if (document.readyState !== "loading") {
+    initSidebar();
+  }
+</script>

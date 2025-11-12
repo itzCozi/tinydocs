@@ -1,0 +1,54 @@
+---
+title: Creating Content
+description: Learn how to create documentation pages
+order: 4
+---
+
+# Creating Content
+
+Learn how to create and organize your documentation content.
+
+## Content Structure
+
+TinyDocs organizes content in the `src/content/docs/` directory:
+
+```
+src/content/docs/
+├── index.mdx                    # Main docs index
+├── intro/
+│   ├── index.mdx               # Intro section index
+│   └── why-tinydocs.mdx        # Additional intro page
+└── getting-started/
+    ├── index.mdx               # Getting started index
+    ├── installation.mdx        # Installation guide
+    ├── configuration.mdx       # Configuration guide
+    └── creating-content.mdx    # This page
+```
+
+## Creating a New Page
+
+1. Create a new `.mdx` file in the appropriate directory
+2. Add frontmatter with required metadata
+3. Write your content using Markdown
+
+### Example Page
+
+```mdx
+---
+title: My New Page
+description: A helpful description
+order: 5
+---
+
+# My New Page
+
+Content goes here...
+```
+
+## Organizing with Sections
+
+Create subdirectories to organize related pages into collapsible sections in the sidebar.
+
+## Next Steps
+
+Learn about [MDX components](/docs/getting-started/mdx-components) available in TinyDocs.
