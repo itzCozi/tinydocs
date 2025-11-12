@@ -20,25 +20,6 @@ const { defaultTab = 0, class: className } = Astro.props;
   </div>
 </div>
 
-<style is:global>
-  .tabs-container:not([data-initialized="true"]) .tab-content > :not([data-default="true"]) {
-    display: none;
-  }
-  .tabs-container:not([data-initialized="true"]) .tab-content > [data-default="true"] {
-    display: block;
-  }
-  .tabs-container:not([data-initialized="true"])
-    .tab-content:not(:has(> [data-default="true"]))
-    > :not(:first-child) {
-    display: none;
-  }
-  .tabs-container:not([data-initialized="true"])
-    .tab-content:not(:has(> [data-default="true"]))
-    > :first-child {
-    display: block;
-  }
-</style>
-
 <noscript>
   <style>
     .tabs-container .tab-panel {

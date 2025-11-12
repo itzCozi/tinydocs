@@ -75,22 +75,6 @@
   </button>
 </div>
 
-<style>
-  .theme-button {
-    transition:
-      background-color 0.3s ease,
-      outline 0.3s ease;
-  }
-
-  .theme-button.active {
-    background-color: white;
-  }
-
-  :global(.dark) .theme-button.active {
-    background-color: var(--active-bg-dark, #0f0f0f);
-  }
-</style>
-
 <script data-astro-rerun is:inline>
   (function () {
     const theme = localStorage.getItem("currentTheme") || "system";

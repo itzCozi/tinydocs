@@ -464,37 +464,3 @@ const { showMobileToc = false } = Astro.props as Props;
     (window as any).__navGlobalBound = true;
   }
 </script>
-
-<style>
-  #mobile-menu.show {
-    display: flex;
-  }
-  .toc-active {
-    color: var(--color-link) !important;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .dark .toc-active {
-    color: var(--color-dark-link) !important;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
-  html {
-    scroll-padding-top: 5rem;
-  }
-  @media (max-width: 767px) {
-    #mobile-menu {
-      max-height: 40vh;
-      max-height: 40svh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    #mobile-toc {
-      max-height: 30vh;
-      max-height: 30svh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-  }
-</style>
