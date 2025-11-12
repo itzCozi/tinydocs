@@ -25,7 +25,7 @@ const sections = new Map<string, NavSection>();
 
 allDocs.forEach((doc) => {
   const parts = doc.id.split("/");
-  
+
   if (parts.length === 1) {
     // Root level doc
     if (!sections.has("")) {
@@ -69,12 +69,16 @@ const currentPath = Astro.url.pathname;
 ---
 
 <aside class="docs-sidebar">
-  <nav aria-label="Documentation navigation" class="space-y-4">
+  <nav
+    aria-label="Documentation navigation"
+    class="space-y-4">
     {
       sortedSections.map((section) => (
         <div class="sidebar-section">
           {section.path !== "" && (
-            <details class="sidebar-group" open>
+            <details
+              class="sidebar-group"
+              open>
               <summary class="sidebar-section-title">
                 <ChevronDown class="chevron h-4 w-4" />
                 <span>{section.title}</span>
@@ -84,7 +88,7 @@ const currentPath = Astro.url.pathname;
                   const itemPath = `/docs/${item.id}`;
                   const isActive = currentPath === itemPath || currentPath === itemPath + "/";
                   const isIndex = item.id.endsWith("/index");
-                  
+
                   return (
                     <li>
                       <a
@@ -104,7 +108,7 @@ const currentPath = Astro.url.pathname;
               {section.items.map((item) => {
                 const itemPath = `/docs/${item.id}`;
                 const isActive = currentPath === itemPath || currentPath === itemPath + "/";
-                
+
                 return (
                   <li>
                     <a

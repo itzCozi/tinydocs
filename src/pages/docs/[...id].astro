@@ -40,8 +40,10 @@ const { Content } = await render(entry);
         />
       )
     }
-    
-    <div class="prose mx-auto max-w-none" id="docs-content">
+
+    <div
+      class="prose mx-auto max-w-none"
+      id="docs-content">
       <Content />
     </div>
   </article>
@@ -69,9 +71,7 @@ const { Content } = await render(entry);
 
     const contentText = docsContent.textContent || "";
     const searchTermLower = searchTerm.toLowerCase();
-    const contentContainsSearchTerm = contentText
-      .toLowerCase()
-      .includes(searchTermLower);
+    const contentContainsSearchTerm = contentText.toLowerCase().includes(searchTermLower);
 
     if (!contentContainsSearchTerm) return;
 
@@ -88,10 +88,7 @@ const { Content } = await render(entry);
       const regex = new RegExp(`(${escapedSearchText})`, "gi");
 
       if (regex.test(text)) {
-        const highlightedHTML = text.replace(
-          regex,
-          '<mark class="search-highlight">$1</mark>',
-        );
+        const highlightedHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = highlightedHTML;
 
@@ -130,9 +127,7 @@ const { Content } = await render(entry);
         });
 
         setTimeout(() => {
-          document.dispatchEvent(
-            new CustomEvent("search-highlighting-complete"),
-          );
+          document.dispatchEvent(new CustomEvent("search-highlighting-complete"));
         }, 200);
       }
     }, 100);
