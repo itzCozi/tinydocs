@@ -25,11 +25,11 @@ const sections = new Map<string, DocSection>();
 // Group documents by their parent directory
 docsEntries.forEach((entry) => {
   const pathParts = entry.id.split("/");
-  
+
   // Determine section based on path structure
   let sectionName: string;
   let isCollapsible = false;
-  
+
   if (pathParts.length === 1 || (pathParts.length === 2 && pathParts[1] === "index")) {
     // Root level docs (e.g., "index.mdx" or "docs/index.mdx")
     sectionName = "Root";
@@ -41,7 +41,7 @@ docsEntries.forEach((entry) => {
       .join(" ");
     isCollapsible = true;
   }
-  
+
   if (!sections.has(sectionName)) {
     sections.set(sectionName, {
       name: sectionName,
@@ -50,22 +50,22 @@ docsEntries.forEach((entry) => {
       isCollapsible,
     });
   }
-  
+
   const section = sections.get(sectionName)!;
-  
+
   // Determine the display path
   let displayPath = entry.id;
   if (displayPath.endsWith("/index")) {
     displayPath = displayPath.replace(/\/index$/, "");
   }
-  
+
   section.items.push({
     id: entry.id,
     title: entry.data.title,
     order: entry.data.order || 999,
     url: `/docs/${displayPath}`,
   });
-  
+
   // Update section order to be minimum of all items in it
   if (entry.data.order && entry.data.order < section.order) {
     section.order = entry.data.order;
@@ -84,21 +84,42 @@ const currentPath = Astro.url.pathname;
 ---
 
 <aside class="docs-sidebar">
-  <nav class="sidebar-nav" aria-label="Documentation navigation">
-    {sortedSections.map((section) => (
-      <div class="sidebar-section">
-        {section.isCollapsible ? (
-          <>
-            <button
-              class="section-toggle"
-              aria-expanded="true"
-              data-section={section.name}
-            >
-              <ChevronDown class="chevron-icon h-4 w-4" />
-              <ChevronRight class="chevron-icon chevron-right h-4 w-4 hidden" />
-              <span class="section-title">{section.name}</span>
-            </button>
-            <ul class="section-items" data-section-items={section.name}>
+  <nav
+    class="sidebar-nav"
+    aria-label="Documentation navigation">
+    {
+      sortedSections.map((section) => (
+        <div class="sidebar-section">
+          {section.isCollapsible ?
+            <>
+              <button
+                class="section-toggle"
+                aria-expanded="true"
+                data-section={section.name}>
+                <ChevronDown class="chevron-icon h-4 w-4" />
+                <ChevronRight class="chevron-icon chevron-right hidden h-4 w-4" />
+                <span class="section-title">{section.name}</span>
+              </button>
+              <ul
+                class="section-items"
+                data-section-items={section.name}>
+                {section.items.map((item) => {
+                  const isActive = currentPath === item.url || currentPath === `${item.url}/`;
+                  return (
+                    <li>
+                      <a
+                        href={item.url}
+                        class={`sidebar-link ${isActive ? "active" : ""}`}
+                        aria-current={isActive ? "page" : undefined}>
+                        <FileText class="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          : <ul class="section-items root-items">
               {section.items.map((item) => {
                 const isActive = currentPath === item.url || currentPath === `${item.url}/`;
                 return (
@@ -106,8 +127,7 @@ const currentPath = Astro.url.pathname;
                     <a
                       href={item.url}
                       class={`sidebar-link ${isActive ? "active" : ""}`}
-                      aria-current={isActive ? "page" : undefined}
-                    >
+                      aria-current={isActive ? "page" : undefined}>
                       <FileText class="h-4 w-4" />
                       <span>{item.title}</span>
                     </a>
@@ -115,43 +135,25 @@ const currentPath = Astro.url.pathname;
                 );
               })}
             </ul>
-          </>
-        ) : (
-          <ul class="section-items root-items">
-            {section.items.map((item) => {
-              const isActive = currentPath === item.url || currentPath === `${item.url}/`;
-              return (
-                <li>
-                  <a
-                    href={item.url}
-                    class={`sidebar-link ${isActive ? "active" : ""}`}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    <FileText class="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    ))}
+          }
+        </div>
+      ))
+    }
   </nav>
 </aside>
 
 <script>
   function initSidebar() {
     const toggleButtons = document.querySelectorAll(".section-toggle");
-    
+
     toggleButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const isExpanded = button.getAttribute("aria-expanded") === "true";
         const sectionName = button.getAttribute("data-section");
         const items = document.querySelector(`[data-section-items="${sectionName}"]`);
-        
+
         button.setAttribute("aria-expanded", isExpanded ? "false" : "true");
-        
+
         if (items) {
           if (isExpanded) {
             items.classList.add("collapsed");

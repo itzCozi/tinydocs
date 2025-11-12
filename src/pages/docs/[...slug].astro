@@ -21,9 +21,11 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<DocsLayout title={entry.data.title} description={entry.data.description}>
+<DocsLayout
+  title={entry.data.title}
+  description={entry.data.description}>
   <SeoPage slot="head" />
-  
+
   <article class="docs-article">
     {
       entry.data.image && (
@@ -34,10 +36,15 @@ const { Content } = await render(entry);
         />
       )
     }
-    <div class="prose mx-auto max-w-none lg:mx-0" id="docs-content">
+    <div
+      class="prose mx-auto max-w-none lg:mx-0"
+      id="docs-content">
       <Content />
     </div>
   </article>
 
-  <TableOfContents slot="toc" content={entry.body || ""} />
+  <TableOfContents
+    slot="toc"
+    content={entry.body || ""}
+  />
 </DocsLayout>

@@ -17,7 +17,14 @@ const { title, description } = Astro.props;
 <html lang="en">
   <BaseHead>
     <title>{title} - TinyDocs</title>
-    {description && <meta name="description" content={description} />}
+    {
+      description && (
+        <meta
+          name="description"
+          content={description}
+        />
+      )
+    }
     <slot name="head" />
   </BaseHead>
   <body class="bg-bg dark:bg-dark-bg">
