@@ -1,0 +1,82 @@
+---
+title: Writing Documentation
+description: Learn how to write effective documentation with TinyDocs
+order: 1
+---
+
+import InfoBox from "@/components/mdx/InfoBox.astro";
+import { CircleHelp, AlertOctagon } from "lucide-astro";
+
+# Writing Documentation
+
+This guide covers the basics of writing documentation in TinyDocs.
+
+## File Structure
+
+Your documentation files should be placed in `src/content/docs/`:
+
+```
+src/content/docs/
+├── index.mdx              # Main documentation page
+├── intro/
+│   ├── index.mdx         # Intro section landing page
+│   └── installation.mdx  # Installation guide
+└── guides/
+    └── writing-docs.mdx  # This page
+```
+
+## Frontmatter
+
+Each documentation page requires frontmatter at the top:
+
+```yaml
+---
+title: Page Title
+description: Brief description of the page
+order: 1  # Optional: controls page order in navigation
+---
+```
+
+## Using Markdown
+
+TinyDocs supports all standard Markdown features:
+
+### Headings
+
+Use `#` for headings. The page title is automatically an H1, so start with H2 (`##`) in your content.
+
+### Lists
+
+- Unordered lists use `-` or `*`
+- Nested lists are supported
+  - Just indent with spaces
+
+1. Ordered lists use numbers
+2. They auto-increment
+3. Even if you use the same number
+
+### Code Blocks
+
+Use triple backticks for code blocks with syntax highlighting:
+
+```javascript
+function hello() {
+  console.log("Hello, TinyDocs!");
+}
+```
+
+## Using MDX Components
+
+TinyDocs includes several built-in MDX components:
+
+<InfoBox icon={CircleHelp} variant="info">
+Use InfoBox components to highlight important information.
+</InfoBox>
+
+<InfoBox icon={AlertOctagon} variant="warning">
+Warning boxes help draw attention to critical notes.
+</InfoBox>
+
+## Next Steps
+
+Explore the other guides to learn more about organizing and customizing your documentation.

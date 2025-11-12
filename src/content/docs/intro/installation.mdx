@@ -1,0 +1,66 @@
+---
+title: Installation
+description: How to install and configure TinyDocs
+order: 2
+---
+
+import InfoBox from "@/components/mdx/InfoBox.astro";
+import Tabs from "@/components/mdx/Tabs.astro";
+import TabPanel from "@/components/mdx/TabPanel.astro";
+import { Lightbulb } from "lucide-astro";
+
+# Installation
+
+This guide will walk you through installing and setting up TinyDocs for your documentation needs.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- Node.js 14.16 or higher
+- pnpm package manager
+
+## Installation Steps
+
+<Tabs>
+  <TabPanel title="Using Template">
+    1. Click the "Use this template" button on GitHub
+    2. Clone your new repository
+    3. Install dependencies:
+    ```bash
+    pnpm install
+    ```
+    4. Start the development server:
+    ```bash
+    pnpm dev
+    ```
+  </TabPanel>
+  
+  <TabPanel title="Manual Setup">
+    1. Clone the repository:
+    ```bash
+    git clone https://github.com/itzCozi/tinydocs.git
+    cd tinydocs
+    ```
+    2. Install dependencies:
+    ```bash
+    pnpm install
+    ```
+    3. Start the development server:
+    ```bash
+    pnpm dev
+    ```
+  </TabPanel>
+</Tabs>
+
+<InfoBox icon={Lightbulb} variant="tip">
+TinyDocs uses pnpm for package management. Make sure you have it installed globally with `npm install -g pnpm`.
+</InfoBox>
+
+## Configuration
+
+After installation, update the site configuration in `src/siteConfig.ts` with your documentation site details.
+
+## Next Steps
+
+Now that you have TinyDocs installed, you can start [writing your documentation](/docs/guides/writing-docs).

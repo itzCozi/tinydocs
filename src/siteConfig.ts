@@ -6,9 +6,9 @@ import type {
 } from "@/types.ts";
 
 export const SITE: SiteConfiguration = {
-  title: "TinyBones",
-  description: "A minimal blog template for your thoughts",
-  href: "https://tinybones.pages.dev/",
+  title: "TinyDocs",
+  description: "A minimal documentation framework built with Astro",
+  href: "https://tinydocs.pages.dev/",
   author: "BadDeveloper",
   locale: "en-US",
 };
@@ -29,17 +29,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 export const NAV_LINKS: NavigationLinks = {
+  docs: {
+    path: "/docs",
+    label: "Docs",
+  },
   about: {
     path: "/about",
     label: "About",
-  },
-  blog: {
-    path: "/blog",
-    label: "Blog",
-  },
-  projects: {
-    path: "/projects",
-    label: "Projects",
   },
 };
 

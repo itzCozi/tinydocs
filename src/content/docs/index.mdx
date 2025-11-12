@@ -1,0 +1,39 @@
+---
+title: Welcome to TinyDocs
+description: A minimal documentation framework built with Astro
+order: 1
+---
+
+import InfoBox from "@/components/mdx/InfoBox.astro";
+import { CircleHelp } from "lucide-astro";
+
+# Welcome to TinyDocs
+
+TinyDocs is a minimal, fast, and customizable documentation framework built with [Astro](https://astro.build/). Perfect for developers who want clean, organized documentation without the bloat.
+
+## Key Features
+
+- **Minimal and fast:** Built with Astro for optimal performance
+- **SEO-friendly:** Sitemap and Open Graph protocol support out of the box
+- **Accessible:** System, dark, and light mode support with keyboard navigation
+- **Developer-friendly:** TypeScript, Tailwind CSS, and modern tooling
+- **MDX support:** Write interactive documentation with custom components
+- **Organized structure:** Nested categories with collapsible navigation
+
+<InfoBox icon={CircleHelp} variant="info">
+This is an example of the InfoBox component that you can use in your documentation.
+</InfoBox>
+
+## Getting Started
+
+To get started with TinyDocs, check out the [Introduction](/docs/intro/) guide.
+
+## Structure
+
+Your documentation is organized in the `src/content/docs/` directory:
+
+- `index.mdx` - Your main documentation page
+- `intro/` - Introduction section with nested pages
+- `guides/` - Guides and tutorials
+
+Each directory can have an `index.mdx` file that serves as the landing page for that section.

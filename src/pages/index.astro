@@ -1,19 +1,71 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-
-import Introduction from "@/components/Introduction.astro";
-import Posts from "@/components/Posts.astro";
-import Projects from "@/components/Projects.astro";
 import SeoPage from "@/components/SeoPage.astro";
+import { SITE } from "@/siteConfig";
 ---
 
 <BaseLayout>
   <SeoPage slot="head" />
-  <div>
-    <Introduction />
-    <div class="mt-10 flex flex-col gap-5">
-      <Posts />
-      <Projects />
+  <div class="flex min-h-[80vh] flex-col items-center justify-center text-center">
+    <div class="mb-8">
+      <h1 class="mb-4 text-5xl font-bold md:text-6xl lg:text-7xl">
+        {SITE.title}
+      </h1>
+      <p class="mx-auto max-w-2xl text-xl text-muted-text dark:text-dark-muted-text md:text-2xl">
+        {SITE.description}
+      </p>
+    </div>
+    
+    <div class="flex flex-col gap-4 sm:flex-row sm:gap-6">
+      <a
+        href="/docs/index"
+        class="rounded-lg bg-link px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-link/90 dark:bg-dark-link dark:hover:bg-dark-link/90">
+        Get Started
+      </a>
+      <a
+        href="/about"
+        class="rounded-lg border-2 border-link px-8 py-3 text-lg font-semibold text-link transition-colors hover:bg-link/10 dark:border-dark-link dark:text-dark-link dark:hover:bg-dark-link/10">
+        Learn More
+      </a>
+    </div>
+
+    <div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
+        <h3 class="mb-2 text-lg font-semibold">⚡ Fast & Minimal</h3>
+        <p class="text-sm text-muted-text dark:text-dark-muted-text">
+          Built with Astro for optimal performance with minimal JavaScript
+        </p>
+      </div>
+      
+      <div class="rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
+        <h3 class="mb-2 text-lg font-semibold">📝 MDX Support</h3>
+        <p class="text-sm text-muted-text dark:text-dark-muted-text">
+          Write interactive documentation with custom components
+        </p>
+      </div>
+      
+      <div class="rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
+        <h3 class="mb-2 text-lg font-semibold">🎨 Customizable</h3>
+        <p class="text-sm text-muted-text dark:text-dark-muted-text">
+          Easy to customize with Tailwind CSS and TypeScript
+        </p>
+      </div>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  h1 {
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-link) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dark h1 {
+    background: linear-gradient(135deg, var(--color-dark-text) 0%, var(--color-dark-link) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
