@@ -1,0 +1,18 @@
+---
+import { ExternalLink as ExternalLinkIcon } from "lucide-astro";
+const { href } = Astro.props;
+---
+
+<li class="flex items-center gap-1.5">
+  <a
+    {href}
+    class="link">
+    <slot />
+  </a>
+  <ExternalLinkIcon
+    aria-hidden="true"
+    class="text-muted-text dark:text-dark-muted-text"
+    size={15}
+    strokeWidth={2}
+  />
+</li>

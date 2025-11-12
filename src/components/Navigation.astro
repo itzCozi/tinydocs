@@ -1,0 +1,504 @@
+---
+import { NAV_LINKS, SITE } from "@/siteConfig";
+import Search from "./Search.astro";
+import BlogDropdown from "./BlogDropdown.astro";
+import { Menu, Search as SearchIcon, X, BookOpenText } from "lucide-astro";
+
+interface Props {
+  showMobileToc?: boolean;
+}
+
+const { showMobileToc = false } = Astro.props as Props;
+---
+
+<header
+  id="site-header"
+  class="bg-bg dark:bg-dark-bg fixed top-0 right-0 left-0 z-10 border-b-[0.5px] border-transparent">
+  <div
+    class="mx-auto flex max-w-screen-lg flex-wrap items-center justify-between p-2 pb-2 font-sans sm:px-5 sm:py-3">
+    <div class="flex w-full items-center justify-between md:w-auto">
+      <div class="flex items-center gap-4">
+        <div class="hidden md:block">
+          <BlogDropdown />
+        </div>
+        <a
+          href="/"
+          class="text-xl font-bold"
+          >{SITE.title}</a
+        >
+      </div>
+      <div class="flex items-center gap-4 md:hidden">
+        <button
+          aria-label="Search"
+          id="open-search-btn">
+          <SearchIcon class="h-6 w-6" />
+        </button>
+        {
+          showMobileToc && (
+            <button
+              id="mobile-toc-toggle"
+              class="md:hidden"
+              aria-label="Open table of contents"
+              aria-expanded="false"
+              aria-controls="mobile-toc">
+              <BookOpenText class="h-6 w-6" />
+            </button>
+          )
+        }
+        <button
+          aria-label="Menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          id="mobile-menu-toggle">
+          <Menu class="h-6 w-6" />
+        </button>
+      </div>
+    </div>
+
+    <div class="hidden w-full md:block md:w-auto">
+      <Search
+        formId="search-form-desktop"
+        inputId="search-input-desktop"
+        resultsId="search-results-desktop"
+      />
+    </div>
+
+    <nav
+      id="mobile-menu"
+      class="mt-4 hidden w-full flex-col items-start md:mt-0 md:flex md:w-auto md:flex-row md:items-center">
+      <ul
+        class="flex w-full list-none flex-col items-start gap-4 p-0 md:mr-4 md:w-auto md:flex-row md:items-center md:gap-5">
+        {
+          Object.keys(NAV_LINKS).map((navItemKey) => {
+            return (
+              <li>
+                <a
+                  href={NAV_LINKS[navItemKey].path}
+                  class="nav-link block py-1">
+                  {NAV_LINKS[navItemKey].label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    {
+      showMobileToc && (
+        <div
+          id="mobile-toc"
+          class="mt-2 hidden w-full overflow-y-auto overscroll-contain pr-1 md:hidden">
+          <nav aria-label="Table of contents">
+            <ul
+              id="mobile-toc-list"
+              class="space-y-1.5"
+            />
+          </nav>
+        </div>
+      )
+    }
+  </div>
+</header>
+
+<div
+  id="mobile-search-modal"
+  class="fixed inset-0 z-50 hidden bg-black/60">
+  <div
+    class="bg-bg dark:bg-dark-bg flex h-full w-full flex-col p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mobile-search-title">
+    <div class="mb-3 flex items-center justify-between">
+      <h2
+        id="mobile-search-title"
+        class="text-lg font-semibold">
+        Search
+      </h2>
+      <button
+        id="close-search-btn"
+        aria-label="Close search">
+        <X class="h-6 w-6" />
+      </button>
+    </div>
+    <div class="flex-1 overflow-auto">
+      <Search
+        mode="modal"
+        formId="search-form-modal"
+        inputId="search-input-modal"
+        resultsId="search-results-modal"
+      />
+    </div>
+  </div>
+</div>
+
+<script>
+  function getMobileMenu() {
+    return document.getElementById("mobile-menu");
+  }
+  function getMobileMenuToggle() {
+    return document.getElementById("mobile-menu-toggle");
+  }
+  function getSearchModal() {
+    return document.getElementById("mobile-search-modal");
+  }
+  function getMobileToc() {
+    return document.getElementById("mobile-toc");
+  }
+  function getMobileTocToggle() {
+    return document.getElementById("mobile-toc-toggle");
+  }
+  function getMobileTocList() {
+    return document.getElementById("mobile-toc-list");
+  }
+
+  function closeMobileMenu() {
+    const menu = getMobileMenu();
+    if (!menu) return;
+    menu.classList.add("hidden");
+    menu.classList.remove("show");
+    updateHeaderDivider();
+  }
+
+  function toggleMobileMenu() {
+    const menu = getMobileMenu();
+    const toggle = getMobileMenuToggle();
+    if (!menu) return;
+    closeMobileToc();
+    menu.classList.toggle("hidden");
+    menu.classList.toggle("show");
+    const isOpen = menu.classList.contains("show");
+    toggle?.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    if (isOpen) {
+      const firstLink = menu.querySelector("a");
+      (firstLink as HTMLElement | null)?.focus();
+    }
+    updateHeaderDivider();
+  }
+
+  function openSearchModal() {
+    const modal = getSearchModal();
+    modal?.classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
+    setTimeout(() => {
+      const input = document.getElementById("search-input-modal");
+      if (input) (input as HTMLInputElement).focus();
+    }, 50);
+  }
+
+  function closeSearchModal() {
+    const modal = getSearchModal();
+    modal?.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+    const results = document.getElementById("search-results-modal");
+    results?.classList.add("hidden");
+  }
+
+  function closeMobileToc() {
+    const toc = getMobileToc();
+    const toggle = getMobileTocToggle();
+    if (!toc || !toggle) return;
+    toc.classList.add("hidden");
+    toggle.setAttribute("aria-expanded", "false");
+    updateHeaderDivider();
+  }
+
+  function toggleMobileToc() {
+    const toc = getMobileToc();
+    const toggle = getMobileTocToggle();
+    if (!toc || !toggle) return;
+    closeMobileMenu();
+    const isHidden = toc.classList.contains("hidden");
+    toc.classList.toggle("hidden");
+    toggle.setAttribute("aria-expanded", isHidden ? "true" : "false");
+    updateHeaderDivider();
+  }
+
+  function getHeader() {
+    return document.getElementById("site-header");
+  }
+
+  function isMobileMenuOpen() {
+    const menu = getMobileMenu();
+    return !!menu && menu.classList.contains("show") && !menu.classList.contains("hidden");
+  }
+
+  function isMobileTocOpen() {
+    const toc = getMobileToc();
+    return !!toc && !toc.classList.contains("hidden");
+  }
+
+  function updateHeaderDivider() {
+    const header = getHeader();
+    if (!header) return;
+    const anyOpen = isMobileMenuOpen() || isMobileTocOpen();
+    const colorOn = ["border-neutral-300", "dark:border-neutral-700"];
+    const colorOff = ["border-transparent"];
+    const baseShadow = [
+      "shadow-[0_6px_12px_-8px_rgba(0,0,0,0.18)]",
+      "dark:shadow-[0_6px_12px_-8px_rgba(0,0,0,0.5)]",
+    ];
+    if (anyOpen) {
+      header.classList.remove(...colorOff);
+      header.classList.add(...colorOn, ...baseShadow);
+    } else {
+      header.classList.remove(...colorOn, ...baseShadow);
+      header.classList.add(...colorOff);
+    }
+  }
+
+  function ensureHeadingId(el: Element, idCounts: Map<string, number>) {
+    if ((el as HTMLElement).id) return (el as HTMLElement).id;
+    const text = el.textContent || "";
+    let baseId = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .trim();
+    let id = baseId || "section";
+    const count = idCounts.get(baseId) || 0;
+    if (count > 0) id = `${baseId}-${count}`;
+    idCounts.set(baseId, count + 1);
+    (el as HTMLElement).id = id;
+    return id;
+  }
+
+  function buildMobileToc() {
+    const tocToggle = getMobileTocToggle();
+    const tocList = getMobileTocList();
+    const tocContainer = getMobileToc();
+    if (!tocToggle || !tocList || !tocContainer) return;
+
+    tocList.innerHTML = "";
+
+    const prose = document.querySelector(".prose");
+    if (!prose) {
+      tocToggle.style.display = "none";
+      return;
+    }
+
+    const headings = prose.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    if (!headings.length) {
+      tocToggle.style.display = "none";
+      return;
+    }
+
+    const idCounts = new Map<string, number>();
+    const items: { id: string; text: string; level: number }[] = [];
+    headings.forEach((h) => {
+      const level = Number(h.tagName.substring(1));
+      if (level === 1) return;
+      const id = ensureHeadingId(h, idCounts);
+      const text = (h.textContent || "")
+        .trim()
+        .replace(/^#\s*/, "")
+        .replace(/\s*#\s*$/, "");
+      items.push({ id, text, level });
+    });
+
+    if (!items.length) {
+      const h1 = prose.querySelector("h1");
+      if (h1) {
+        const id = ensureHeadingId(h1, idCounts);
+        const text = (h1.textContent || "")
+          .trim()
+          .replace(/^#\s*/, "")
+          .replace(/\s*#\s*$/, "");
+        items.push({ id, text, level: 1 });
+      }
+    }
+
+    if (!items.length) {
+      tocToggle.style.display = "none";
+      return;
+    }
+
+    const textCounts = new Map<string, number>();
+    items.forEach((it) => {
+      const li = document.createElement("li");
+      li.className = `toc-item toc-level-${it.level}`;
+      const a = document.createElement("a");
+      a.href = `#${it.id}`;
+      const norm = it.text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .trim();
+      const current = (textCounts.get(norm) || 0) + 1;
+      textCounts.set(norm, current);
+      a.textContent = current > 1 ? `${it.text} (${current})` : it.text;
+      a.className =
+        "toc-link block text-sm text-muted-text dark:text-dark-muted-text hover:text-link dark:hover:text-dark-link transition-colors duration-200";
+      a.style.paddingLeft = `${(it.level - 1) * 0.75}rem`;
+      a.addEventListener("click", () => {
+        setTimeout(() => closeMobileToc(), 50);
+      });
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    tocToggle.style.display = "inline-flex";
+
+    setupCurrentHeaderObserver(items.map((i) => i.id));
+  }
+
+  function setupCurrentHeaderObserver(ids: string[]) {
+    if (!ids.length) return;
+    const observerOptions = { rootMargin: "-20% 0% -70% 0%", threshold: 0 };
+    const list = getMobileTocList() || document.createElement("div");
+    const links = Array.from(list.querySelectorAll(".toc-link"));
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = (entry.target as HTMLElement).id;
+        links.forEach((l) => l.classList.remove("toc-active"));
+        const active = list.querySelector(`.toc-link[href="#${id}"]`);
+        (active as HTMLElement | null)?.classList.add("toc-active");
+      });
+    }, observerOptions);
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    const openBtn = document.getElementById("open-search-btn");
+    const closeBtn = document.getElementById("close-search-btn");
+    const modal = getSearchModal();
+    const mobileMenu = getMobileMenu();
+    const mobileMenuToggle = getMobileMenuToggle();
+    const mobileTocToggle = getMobileTocToggle();
+    closeMobileMenu();
+    closeMobileToc();
+    updateHeaderDivider();
+
+    openBtn?.addEventListener("click", openSearchModal);
+    closeBtn?.addEventListener("click", closeSearchModal);
+    mobileMenuToggle?.addEventListener("click", toggleMobileMenu);
+    mobileMenuToggle?.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const menu = getMobileMenu();
+        if (menu?.classList.contains("show")) {
+          const firstLink = menu.querySelector("a");
+          (firstLink as HTMLElement | null)?.focus();
+        } else {
+          toggleMobileMenu();
+        }
+      }
+    });
+    mobileTocToggle?.addEventListener("click", toggleMobileToc);
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeSearchModal();
+      }
+    });
+
+    mobileMenu
+      ?.querySelectorAll("a")
+      .forEach((a) => a.addEventListener("click", () => closeMobileMenu()));
+
+    setTimeout(buildMobileToc, 0);
+
+    document.addEventListener("search-highlighting-complete", () => setTimeout(buildMobileToc, 0));
+  });
+
+  if (!(window as any).__navGlobalBound) {
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      const modal = getSearchModal();
+      const menu = getMobileMenu();
+      if (modal && !modal.classList.contains("hidden")) closeSearchModal();
+      if (menu && !menu.classList.contains("hidden")) closeMobileMenu();
+      const maybeToc = getMobileToc();
+      if (maybeToc && !maybeToc.classList.contains("hidden")) closeMobileToc();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.defaultPrevented) return;
+      if (e.key !== "/" || e.altKey || e.ctrlKey || e.metaKey) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      const isEditable = !!target && (target as any).isContentEditable;
+      if (tag === "input" || tag === "textarea" || isEditable) return;
+
+      e.preventDefault();
+
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      if (isDesktop) {
+        const desktopInput = document.getElementById(
+          "search-input-desktop",
+        ) as HTMLInputElement | null;
+        if (desktopInput) {
+          desktopInput.focus();
+          desktopInput.select();
+          return;
+        }
+      }
+
+      openSearchModal();
+    });
+
+    document.addEventListener("click", (e) => {
+      const menu = getMobileMenu();
+      if (!menu || menu.classList.contains("hidden")) return;
+      const target = e.target as Node;
+      const clickedInsideMenu = menu.contains(target);
+      const clickedToggle = getMobileMenuToggle()?.contains(target);
+      if (!clickedInsideMenu && !clickedToggle) {
+        closeMobileMenu();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const toc = getMobileToc();
+      if (!toc || toc.classList.contains("hidden")) return;
+      const target = e.target as Node;
+      const clickedInside = toc.contains(target);
+      const clickedToggle = getMobileTocToggle()?.contains(target);
+      if (!clickedInside && !clickedToggle) {
+        closeMobileToc();
+      }
+    });
+
+    (window as any).__navGlobalBound = true;
+  }
+</script>
+
+<style>
+  #mobile-menu.show {
+    display: flex;
+  }
+  .toc-active {
+    color: var(--color-link) !important;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .dark .toc-active {
+    color: var(--color-dark-link) !important;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  html {
+    scroll-padding-top: 5rem;
+  }
+  @media (max-width: 767px) {
+    #mobile-menu {
+      max-height: 40vh;
+      max-height: 40svh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    #mobile-toc {
+      max-height: 30vh;
+      max-height: 30svh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+</style>

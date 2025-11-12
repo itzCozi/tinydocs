@@ -1,0 +1,19 @@
+---
+import { formatDate, calculateReadingTime } from "@/lib/util";
+
+const { post } = Astro.props;
+const readingTime = calculateReadingTime(post.body || "");
+---
+
+<li>
+  <a
+    href={`/blog/${post.id}`}
+    class="flex w-full flex-col sm:flex-row sm:items-center sm:justify-between">
+    <span class="link">{post.data.title}</span>
+    <div
+      class="text-muted-text dark:text-dark-muted-text flex flex-col text-sm font-normal sm:flex-row sm:items-center sm:gap-3">
+      <span>{formatDate(post.data.publicationDate)}</span>
+      <span>{readingTime}</span>
+    </div>
+  </a>
+</li>

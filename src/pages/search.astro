@@ -1,0 +1,51 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SeoPage from "@/components/SeoPage.astro";
+---
+
+<BaseLayout>
+  <link
+    slot="head"
+    rel="preload"
+    as="fetch"
+    href="/search-index.json"
+    type="application/json"
+  />
+  <SeoPage
+    slot="head"
+    title="Search"
+    description="Search posts on TinyBones"
+  />
+
+  <section>
+    <h1 class="mb-4 text-2xl font-bold">Search</h1>
+    <form
+      action="/search"
+      method="get"
+      role="search"
+      class="mb-4 flex gap-2">
+      <input
+        type="search"
+        name="q"
+        id="q"
+        class="dark:bg-dark-bg w-full rounded-md border border-neutral-400 p-2 text-sm text-neutral-900 dark:border-neutral-600 dark:text-white"
+        placeholder="Search posts"
+        aria-label="Search posts"
+      />
+      <button
+        type="submit"
+        class="rounded-md border border-neutral-400 px-3 py-2 text-sm dark:border-neutral-600">
+        Search
+      </button>
+    </form>
+
+    <div
+      id="results"
+      class="grid list-none gap-3 p-0">
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="module" is:inline>
+  import "../scripts/fuzzy-search.ts";
+</script>

@@ -1,0 +1,366 @@
+@import "tailwindcss";
+@import "./typography.css" layer(components);
+@variant dark (&:where(.dark, .dark *));
+
+:root ::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+:root ::-webkit-scrollbar-thumb {
+  background-color: #a0a0a0;
+  cursor: pointer;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #505050;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a0a0a0 transparent;
+}
+
+.dark * {
+  scrollbar-color: #505050 transparent;
+}
+
+:root {
+  color-scheme: light dark;
+}
+.dark {
+  color-scheme: dark;
+}
+.light {
+  color-scheme: light;
+}
+
+.js .cloak { display: none !important; }
+.js [data-cloak="true"] { display: none !important; }
+
+noscript .nojs-show { display: block !important; }
+
+html {
+  font-size: 108%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  font-family: "Cambria", "Georgia", "Times New Roman", "Times", serif;
+}
+* {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    fill 0.2s ease,
+    stroke 0.2s ease;
+  font-family: inherit;
+}
+
+.dyslexic,
+.dyslexic body,
+.dyslexic *:not(code):not(pre):not(kbd):not(samp) {
+  font-family: "Lexend", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif !important;
+  letter-spacing: 0.01em;
+}
+
+.dyslexic pre,
+.dyslexic pre *,
+.dyslexic code,
+.dyslexic code *,
+.dyslexic kbd,
+.dyslexic kbd *,
+.dyslexic samp,
+.dyslexic samp * {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace !important;
+  letter-spacing: 0 !important;
+}
+
+.dyslexic .prose pre,
+.dyslexic .prose pre *,
+.dyslexic .prose code,
+.dyslexic .prose code *,
+.dyslexic .shiki,
+.dyslexic .shiki * {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace !important;
+  letter-spacing: 0 !important;
+}
+
+.dyslexic .prose h1,
+.dyslexic .prose h2,
+.dyslexic .prose h3,
+.dyslexic .prose h4,
+.dyslexic .prose h5,
+.dyslexic .prose h6 {
+  letter-spacing: 0.005em;
+}
+
+.dyslexic .prose :where(p, li) {
+  line-height: 1.7;
+  word-spacing: 0.02em;
+}
+
+:root {
+  --focus-ring-color: var(--color-link);
+}
+.dark {
+  --focus-ring-color: var(--color-dark-link);
+}
+
+:where(a, button, input, select, textarea, summary,
+  [role="button"], [role="menuitem"], [role="tab"], [role="link"],
+  [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+:where(a):focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+@variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(.system, .system *) {
+      @slot;
+    }
+  }
+}
+
+@theme {
+  --color-bg: var(--color-neutral-50);
+  --color-link: oklch(46.97% 0.2734 267.56);
+  --color-muted-text: var(--color-neutral-700);
+
+  --color-dark-bg: var(--color-neutral-950);
+  --color-dark-link: oklch(73.9% 0.1387 282.47);
+  --color-dark-muted-text: var(--color-neutral-300);
+}
+
+.link {
+  --prose-link-color: var(--color-link);
+  --prose-link-underline-color: currentColor;
+
+  color: var(--prose-link-color);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  & code {
+    font-weight: var(--font-weight-semibold);
+  }
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 1px;
+  }
+}
+
+.dark .link {
+  --prose-link-color: var(--color-dark-link);
+  --prose-link-underline-color: currentColor;
+}
+
+.link-toc {
+  --prose-link-color: var(--color-link);
+  --prose-link-underline-color: currentColor;
+
+  color: var(--prose-link-color);
+  font-weight: inherit;
+  text-decoration: none;
+  & code {
+    font-weight: inherit;
+  }
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 1px;
+  }
+}
+
+.dark .link-toc {
+  --prose-link-color: var(--color-dark-link);
+  --prose-link-underline-color: currentColor;
+}
+
+.nav-link {
+  color: var(--prose-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+}
+
+.dark .nav-link {
+  color: var(--color-white);
+}
+
+.social-link {
+  color: var(--prose-color);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.social-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+}
+
+.dark .social-link {
+  color: var(--color-neutral-300);
+  opacity: 1;
+}
+
+.pager-link-1 {
+  color: var(--prose-color);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.pager-link-1:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+}
+
+.dark .pager-link-1 {
+  color: var(--color-neutral-300);
+  opacity: 1;
+}
+
+.pager-link-2 {
+  color: var(--prose-color);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.dark .pager-link-2 {
+  color: var(--color-neutral-300);
+  opacity: 1;
+}
+
+.prose a:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  text-decoration-color: currentColor !important;
+  text-decoration-thickness: 1px !important;
+}
+
+.shiki,
+.shiki span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+  font-style: var(--shiki-light-font-style) !important;
+  font-weight: var(--shiki-light-font-weight) !important;
+  text-decoration: var(--shiki-light-text-decoration) !important;
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.code-block-wrapper {
+  position: relative;
+}
+
+.copy-code-button {
+  position: absolute;
+  margin-right: 0.3rem;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  color: white;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.copy-code-button:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: inherit;
+  text-decoration-thickness: 1px;
+}
+
+.heading-link {
+  text-decoration: none;
+  font-size: 0.8em;
+  vertical-align: middle;
+  margin-right: 0.4em;
+  margin-left: 0;
+  order: -1;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
+  color: currentColor;
+  opacity: 0.7;
+  font-weight: bold;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+.heading-link:hover {
+  color: var(--prose-link-color);
+  opacity: 1;
+}
+
+.dark .heading-link {
+  color: currentColor;
+}
+
+.dark .heading-link:hover {
+  color: var(--prose-link-color);
+  opacity: 1;
+}
+
+.underlined:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: inherit;
+  text-decoration-thickness: 1px;
+}
