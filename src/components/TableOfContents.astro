@@ -75,27 +75,6 @@ const headings = extractHeadings(content);
   )
 }
 
-<style>
-  .toc-container {
-    position: sticky;
-    top: 5rem;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
-  }
-
-  .toc-link:hover {
-    text-decoration: underline;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  html {
-    scroll-padding-top: 5rem;
-  }
-</style>
-
 <script>
   declare global {
     interface Window {
@@ -244,16 +223,3 @@ const headings = extractHeadings(content);
 
   document.addEventListener("search-highlighting-complete", initTableOfContents);
 </script>
-
-<style is:global>
-  .toc-active {
-    color: var(--color-link) !important;
-    font-weight: inherit !important;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .dark .toc-active {
-    color: var(--color-dark-link) !important;
-  }
-</style>
