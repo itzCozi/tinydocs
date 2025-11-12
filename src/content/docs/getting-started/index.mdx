@@ -1,0 +1,73 @@
+---
+title: Getting Started
+description: Set up your TinyDocs site
+order: 2
+---
+
+# Getting Started
+
+This guide will help you set up your TinyDocs documentation site.
+
+## Installation
+
+1. Use this template to create a new repository
+2. Clone your repository
+3. Install dependencies:
+
+```bash
+pnpm install
+```
+
+## Project Structure
+
+TinyDocs uses a simple directory structure:
+
+```
+src/content/
+├── index.mdx              # Launch page
+└── docs/
+    ├── intro/
+    │   └── index.mdx      # Introduction
+    └── getting-started/
+        └── index.mdx      # This page
+```
+
+## Creating Documentation
+
+Create new documentation pages by adding MDX files in the `src/content/docs/` directory. You can organize them into subdirectories to create collapsible sections in the sidebar.
+
+### Frontmatter
+
+Each documentation page should include frontmatter:
+
+```yaml
+---
+title: Page Title
+description: Page description
+order: 1
+---
+```
+
+- `title`: The page title (required)
+- `description`: A brief description (optional)
+- `order`: Sort order within the section (optional)
+
+## Development
+
+Start the development server:
+
+```bash
+pnpm dev
+```
+
+## Building
+
+Build your site for production:
+
+```bash
+pnpm build
+```
+
+## Deployment
+
+Deploy the `dist/` directory to any static hosting provider like Vercel, Netlify, or Cloudflare Pages.
