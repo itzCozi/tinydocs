@@ -17,20 +17,29 @@ interface DocSection {
   name: string;
   items: DocItem[];
   order: number;
+  isCollapsible: boolean;
 }
 
 const sections = new Map<string, DocSection>();
 
+// Group documents by their parent directory
 docsEntries.forEach((entry) => {
   const pathParts = entry.id.split("/");
-  let sectionName = "Root";
-  let itemId = entry.id;
   
-  if (pathParts.length > 1) {
+  // Determine section based on path structure
+  let sectionName: string;
+  let isCollapsible = false;
+  
+  if (pathParts.length === 1 || (pathParts.length === 2 && pathParts[1] === "index")) {
+    // Root level docs (e.g., "index.mdx" or "docs/index.mdx")
+    sectionName = "Root";
+  } else {
+    // Subdirectory docs (e.g., "intro/index.mdx")
     sectionName = pathParts[0]
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+    isCollapsible = true;
   }
   
   if (!sections.has(sectionName)) {
@@ -38,16 +47,29 @@ docsEntries.forEach((entry) => {
       name: sectionName,
       items: [],
       order: entry.data.order || 999,
+      isCollapsible,
     });
   }
   
   const section = sections.get(sectionName)!;
+  
+  // Determine the display path
+  let displayPath = entry.id;
+  if (displayPath.endsWith("/index")) {
+    displayPath = displayPath.replace(/\/index$/, "");
+  }
+  
   section.items.push({
-    id: itemId,
+    id: entry.id,
     title: entry.data.title,
     order: entry.data.order || 999,
-    url: `/docs/${entry.id.replace(/\/index$/, "")}`,
+    url: `/docs/${displayPath}`,
   });
+  
+  // Update section order to be minimum of all items in it
+  if (entry.data.order && entry.data.order < section.order) {
+    section.order = entry.data.order;
+  }
 });
 
 // Sort sections and items
@@ -65,34 +87,54 @@ const currentPath = Astro.url.pathname;
   <nav class="sidebar-nav" aria-label="Documentation navigation">
     {sortedSections.map((section) => (
       <div class="sidebar-section">
-        {section.name !== "Root" ? (
-          <button
-            class="section-toggle"
-            aria-expanded="true"
-            data-section={section.name}
-          >
-            <ChevronDown class="chevron-icon h-4 w-4" />
-            <ChevronRight class="chevron-icon chevron-right h-4 w-4 hidden" />
-            <span class="section-title">{section.name}</span>
-          </button>
-        ) : null}
-        <ul class={`section-items ${section.name === "Root" ? "root-items" : ""}`} data-section-items={section.name}>
-          {section.items.map((item) => {
-            const isActive = currentPath === item.url || currentPath === `${item.url}/`;
-            return (
-              <li>
-                <a
-                  href={item.url}
-                  class={`sidebar-link ${isActive ? "active" : ""}`}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  <FileText class="h-4 w-4" />
-                  <span>{item.title}</span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        {section.isCollapsible ? (
+          <>
+            <button
+              class="section-toggle"
+              aria-expanded="true"
+              data-section={section.name}
+            >
+              <ChevronDown class="chevron-icon h-4 w-4" />
+              <ChevronRight class="chevron-icon chevron-right h-4 w-4 hidden" />
+              <span class="section-title">{section.name}</span>
+            </button>
+            <ul class="section-items" data-section-items={section.name}>
+              {section.items.map((item) => {
+                const isActive = currentPath === item.url || currentPath === `${item.url}/`;
+                return (
+                  <li>
+                    <a
+                      href={item.url}
+                      class={`sidebar-link ${isActive ? "active" : ""}`}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <FileText class="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        ) : (
+          <ul class="section-items root-items">
+            {section.items.map((item) => {
+              const isActive = currentPath === item.url || currentPath === `${item.url}/`;
+              return (
+                <li>
+                  <a
+                    href={item.url}
+                    class={`sidebar-link ${isActive ? "active" : ""}`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    <FileText class="h-4 w-4" />
+                    <span>{item.title}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     ))}
   </nav>
